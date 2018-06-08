@@ -6,8 +6,6 @@ from botocore.stub import Stubber
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import getKeys
 
-stubber = Stubber(getKeys.client)
-
 #Warn after 85 days, expire after 90
 warning = 85
 expiration = 90
@@ -107,6 +105,8 @@ test3KeysResponse = {
   "Marker": "string"
 }
 
+stubber = Stubber(getKeys.client)
+
 def test_issue_users_dict():
   #takes list of IAM users
   #gets all keys for each user
@@ -138,7 +138,7 @@ def test_issue_users_dict():
   assert users[1]['expire'][0] == test2KeysResponse['AccessKeyMetadata'][0]['AccessKeyId']
 
   # User test3:
-  # - should have a key which warns and ttl of expire - sample difference
+  # - should have a key which warns and ttl of expire, sample difference
   # - should have a expired key
   assert users[2]['user'] == usersResponse['Users'][2]['UserName']
   assert users[2]['warn'][0]['ttl'] == (date['sampleDate'].date() - date['expireDate'].date()).days
