@@ -3,6 +3,7 @@ import datetime
 
 client = boto3.client('iam')
 
+# examines key age, inactivate keys deemed expired, provides time-to-live for warn keys
 def examineKeyAge(keys, warnDays, expireDays):
   warn = (datetime.datetime.now() - datetime.timedelta(days=warnDays)).date()
   expire = (datetime.datetime.now() - datetime.timedelta(days=expireDays)).date()
@@ -33,7 +34,9 @@ def examineKeyAge(keys, warnDays, expireDays):
 
   return issueKeys
 
-
+# retrieves all IAM users of AWS account
+# passes list for key examination
+# returns list of users with key activity actions
 def getIssueUsers(warn, expire):
   issueUsers = []
 
@@ -44,7 +47,6 @@ def getIssueUsers(warn, expire):
     issueKeys = examineKeyAge(keys, warn, expire)
     issueUsers.append({ 'user': user['UserName'], 'warn': issueKeys['warn'], 'expired': issueKeys['expired'] })
 
-  print issueUsers
   return issueUsers
 
 if __name__ == "__main__":

@@ -7,12 +7,12 @@ from botocore.stub import Stubber
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import expireKeys
 
-#Warn after 85 days, expire after 90
+# Warn after 85 days, expire after 90
 warning = 85
 expiration = 90
 sample = 87 # should be greater than warning, less than expiration
 
-#testing against logic involving time, set dates which can be asserted
+# testing against logic involving time, set dates which can be asserted
 def setDates(warn, expire):
     today = datetime.datetime.now()
     sampleDays = (datetime.datetime.now() - datetime.timedelta(days=sample))
@@ -124,11 +124,11 @@ updateResponse = {
 stubber = Stubber(expireKeys.client)
 
 def test_issue_users_dict():
-  #takes list of IAM users
-  #gets all keys for each user
-  #determines warn and expired keys
-  #set expired keys to Inactive
-  #return dict with list of warning keys + days remaining and a list of keys set to Inactive
+  # takes list of IAM users
+  # gets all keys for each user
+  # determines warn and expired keys
+  # set expired keys to Inactive
+  # return dict with list of warning keys + days remaining and a list of keys set to Inactive
   stubber.add_response('list_users', usersResponse, {})
   stubber.add_response('list_access_keys', test1KeysResponse, {'UserName': 'test1'})
   stubber.add_response('list_access_keys', test2KeysResponse, {'UserName': 'test2'})
@@ -157,7 +157,7 @@ def test_issue_users_dict():
   assert users[1]['expired'][0] == test2KeysResponse['AccessKeyMetadata'][0]['AccessKeyId']
 
   # User test3:
-  # - should have a key which warns and ttl of expire, sample difference
+  # - should have a key which warns; ttl of expire - sample difference
   # - should have a expired key
   assert users[2]['user'] == usersResponse['Users'][2]['UserName']
   assert users[2]['warn'][0]['ttl'] == (date['sampleDate'].date() - date['expireDate'].date()).days
