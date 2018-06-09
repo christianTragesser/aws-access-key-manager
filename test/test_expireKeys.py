@@ -51,6 +51,14 @@ usersResponse = {
       "Path": "/",
       "UserId": "AIDTKWGCODQAEXAMPLE",
       "UserName": "test3"
+    },
+    {
+      "Arn": "arn:aws:iam::123456789012:user/test4",
+      "CreateDate": datetime.datetime(2018, 4, 28, 16, 38, 14),
+      "PasswordLastUsed": date['today'],
+      "Path": "/",
+      "UserId": "AIDTKWGCODQAEXAMPLE",
+      "UserName": "test4"
     }
   ]
 } 
@@ -106,6 +114,12 @@ test3KeysResponse = {
   "Marker": "string"
 }
 
+test4KeysResponse = {
+  "AccessKeyMetadata": [],
+  "IsTruncated": False,
+  "Marker": "string"
+}
+
 updateResponse = {
   'ResponseMetadata': {
     'RetryAttempts': 0,
@@ -134,6 +148,7 @@ def test_issue_users_dict():
   stubber.add_response('update_access_key', updateResponse, {'AccessKeyId': '22222222222222222222', 'UserName': 'test2', 'Status': 'Inactive'})
   stubber.add_response('list_access_keys', test3KeysResponse, {'UserName': 'test3'})
   stubber.add_response('update_access_key', updateResponse, {'AccessKeyId': '55555555555555555555', 'UserName': 'test3', 'Status': 'Inactive'})
+  stubber.add_response('list_access_keys', test4KeysResponse, {'UserName': 'test4'})
   stubber.activate()
 
   users = expireKeys.getIssueUsers(warning, expiration)
@@ -162,3 +177,9 @@ def test_issue_users_dict():
   assert users[2]['warn'][0]['ttl'] == (date['sampleDate'].date() - date['expireDate'].date()).days
   assert users[2]['warn'][0]['key'] == test3KeysResponse['AccessKeyMetadata'][0]['AccessKeyId']
   assert users[2]['expired'][0] == test3KeysResponse['AccessKeyMetadata'][1]['AccessKeyId']
+
+  # User test4:
+  # - should return no key activities
+  assert users[3]['user'] == usersResponse['Users'][3]['UserName']
+  assert len(users[3]['warn']) == 0
+  assert len(users[3]['expired']) == 0
