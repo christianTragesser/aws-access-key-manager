@@ -179,7 +179,17 @@ def test_issue_users_dict():
   assert users[2]['expired'][0] == test3KeysResponse['AccessKeyMetadata'][1]['AccessKeyId']
 
   # User test4:
-  # - should return no key activities
-  assert users[3]['user'] == usersResponse['Users'][3]['UserName']
-  assert len(users[3]['warn']) == 0
-  assert len(users[3]['expired']) == 0
+  # - should not be returned
+  def verifyUser4NotFound(users):
+    check = []
+    for user in users:
+      if user['user'] == usersResponse['Users'][3]['UserName']:
+        x = True
+        check.append(x)
+      else:
+        x = False
+        check.append(x)
+    return check
+  
+  checks = verifyUser4NotFound(users)
+  assert True not in checks

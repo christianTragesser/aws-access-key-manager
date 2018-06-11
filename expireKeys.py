@@ -45,8 +45,12 @@ def getIssueUsers(warn, expire):
   for user in users['Users']:
     keys = client.list_access_keys(UserName=user['UserName'])
     issueKeys = examineKeyAge(keys, warn, expire)
-    issueUsers.append({ 'user': user['UserName'], 'warn': issueKeys['warn'], 'expired': issueKeys['expired'] })
+    if len(issueKeys['warn']) == 0 and len(issueKeys['expired']) == 0:
+      continue
+    else:
+      issueUsers.append({ 'user': user['UserName'], 'warn': issueKeys['warn'], 'expired': issueKeys['expired'] })
 
+  print issueUsers  
   return issueUsers
 
 if __name__ == "__main__":
