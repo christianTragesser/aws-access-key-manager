@@ -50,7 +50,6 @@ def getIssueUsers(warn, expire):
     else:
       issueUsers.append({ 'user': user['UserName'], 'warn': issueKeys['warn'], 'expired': issueKeys['expired'] })
 
-  print issueUsers  
   return issueUsers
 
 if __name__ == "__main__":
