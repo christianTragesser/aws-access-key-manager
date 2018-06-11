@@ -1,3 +1,14 @@
+from pythonjsonlogger import jsonlogger
+import logging
+import sys
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+log = logging.getLogger()
+logHandler = logging.StreamHandler()
+formatter = jsonlogger.JsonFormatter()
+logHandler.setFormatter(formatter)
+log.addHandler(logHandler)
+
 def keyMessages(events):
     messages = {}
     messages['warnings'] = []
@@ -27,4 +38,5 @@ def summary(messages, expireDays):
       notice += message
     summary['warn'] = notice
   
+  log.info(summary)
   return summary
