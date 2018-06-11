@@ -24,9 +24,9 @@ def test_construct_summary_func():
 def test_get_summary_func():
   messages = summaries.keyMessages(expireResponse)
   summary = summaries.summary(messages, 90)
-  assert summary['warn'] == ('The following keys are older than 90 and have expired:\n'
+  assert summary['expire'] == ('The following keys are older than 90 and have expired:\n'
                              'User: test2, Key Id: 22222222222222222222 - now inactive\n'
                              'User: test3, Key Id: 55555555555555555555 - now inactive\n')
-  assert summary['expire'] == ('The following keys are close to expiration(90 days).  Please renew soon:\n'
+  assert summary['warn'] == ('The following keys are close to expiration(90 days).  Please renew soon:\n'
                                 'User: test1, Key Id: 11111111111111111111 - 5 days remaining\n'
                                 'User: test3, Key Id: 44444444444444444444 - 3 days remaining\n')

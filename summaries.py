@@ -19,12 +19,12 @@ def summary(messages, expireDays):
     notice = "The following keys are older than %d and have expired:\n" % expireDays
     for message in messages['expirations']:
       notice += message
-    summary['warn'] = notice
+    summary['expire'] = notice
 
   if len(messages['warnings']) > 0:
     notice = "The following keys are close to expiration(%d days).  Please renew soon:\n" % expireDays
     for message in messages['warnings']:
       notice += message
-    summary['expire'] = notice
+    summary['warn'] = notice
   
   return summary
