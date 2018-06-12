@@ -15,6 +15,8 @@ def webHook_message(slackurl, title, text, color):
         }
     ]   
     payload = {}
+    payload['username'] = 'AWS access key manager'
+    payload['icon_emoji'] = ':key:'
     payload['attachments'] = [message]
     
     requests.post(slackurl, data=json.dumps(payload), headers=message_header)
