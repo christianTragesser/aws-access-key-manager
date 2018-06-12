@@ -1,5 +1,9 @@
 FROM python:2.7-alpine
 
-RUN pip install boto3 pytest datetime --no-cache-dir
+#Dev dependencies
+RUN pip install pytest mock --no-cache-dir
+
+#Runtime dependencies
+RUN pip install boto3 datetime logging requests python-json-logger --no-cache-dir
 
 CMD ["/bin/sh"]
