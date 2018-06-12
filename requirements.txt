@@ -1,0 +1,5 @@
+boto3==1.7.36
+datetime==4.2
+logging==0.4.9.6
+python-json-logger==0.1.9
+requests==2.19.0
