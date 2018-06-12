@@ -1,14 +1,4 @@
-from pythonjsonlogger import jsonlogger
-import logging
-import sys
 import slack
-
-logging.basicConfig(stream=sys.stdout, level=logging.WARN)
-log = logging.getLogger()
-logHandler = logging.StreamHandler()
-formatter = jsonlogger.JsonFormatter()
-logHandler.setFormatter(formatter)
-log.addHandler(logHandler)
 
 def keyMessages(events):
     messages = {}
@@ -46,5 +36,4 @@ def summary(messages, expireDays, slackUrl):
     slack.webHook_message(slackUrl, title, notice, color)
   
   if len(messages['warnings']) > 0 or len(messages['expirations']) > 0:
-    log.warn(summary)
     return summary

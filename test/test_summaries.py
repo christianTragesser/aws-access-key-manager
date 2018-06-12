@@ -25,7 +25,7 @@ def test_construct_summary_func():
 @mock.patch('slack.webHook_message')
 # Takes in list of warning and expire events
 # Sends warning and expire messages to Slack webhook and system logs
-def test_get_summary_func(mock_slack_message, caplog):
+def test_get_summary_func(mock_slack_message):
   messages = summaries.keyMessages(expireResponse)
   summary = summaries.summary(messages, 90, 'https://slackurl.com')
   
@@ -36,6 +36,3 @@ def test_get_summary_func(mock_slack_message, caplog):
   assert summary['warn'] == ('The following keys are close to expiration(90 days).  Please renew soon:\n'
                                 'User: *test1*, Key Id: 11111111111111111111     *5* days remaining\n'
                                 'User: *test3*, Key Id: 44444444444444444444     *3* days remaining\n')
-  assert 'User: *test1*' in caplog.text
-  assert 'User: *test2*' in caplog.text
-  assert 'User: *test3*' in caplog.text
