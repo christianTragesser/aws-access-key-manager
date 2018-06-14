@@ -1,4 +1,6 @@
 ## AWS IAM access key manager
+[![pipeline status](https://gitlab.com/christianTragesser/aws-access-key-manager/badges/master/pipeline.svg)](https://gitlab.com/christianTragesser/aws-access-key-manager/commits/master)
+
 A boto3 utility used for automated evaluation, invalidation, and renewal(eventually) of IAM user access keys.  Keys older than the expire threshold are inactivated; keys older than the warn threshold but less than expire produce warnings with time-to-live values.  Warning and expiration notifications are communicated via [Slack webhook](https://api.slack.com/incoming-webhooks) and system logs.
 
 ### Quick install
