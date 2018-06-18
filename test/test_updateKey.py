@@ -8,25 +8,7 @@ import updateKey
 
 today = datetime.datetime.now()
 expireDays = (datetime.datetime.now() - datetime.timedelta(days=90))
-
-listResponse = {
-  'AccessKeyMetadata': [
-    {
-      'UserName': 'test1',
-      'AccessKeyId': '11111111111111111111',
-      'Status': 'Inactive',
-      'CreateDate': datetime.datetime(2015, 1, 1)
-    },
-    {
-      'UserName': 'test1',
-      'AccessKeyId': '2222222222222222222',
-      'Status': 'Inactive',
-      'CreateDate': expireDays
-    }
-  ],
-  'IsTruncated': False,
-  'Marker': 'string'
-}
+validDays = (datetime.datetime.now() - datetime.timedelta(days=20))
 
 createResponse = {
   'AccessKey': {
@@ -36,6 +18,57 @@ createResponse = {
     'SecretAccessKey': 'ASDFGHJKLZXCVBNM',
     'CreateDate': today
   }
+}
+
+oneListResponse = {
+  'AccessKeyMetadata': [
+    {
+      'UserName': 'test1',
+      'AccessKeyId': '44444444444444444444',
+      'Status': 'Inactive',
+      'CreateDate': expireDays
+    }
+  ],
+  'IsTruncated': False,
+  'Marker': 'string'
+}
+
+twoListResponse = {
+  'AccessKeyMetadata': [
+    {
+      'UserName': 'test1',
+      'AccessKeyId': '11111111111111111111',
+      'Status': 'Inactive',
+      'CreateDate': datetime.datetime(2015, 1, 1)
+    },
+    {
+      'UserName': 'test1',
+      'AccessKeyId': '22222222222222222222',
+      'Status': 'Inactive',
+      'CreateDate': expireDays
+    }
+  ],
+  'IsTruncated': False,
+  'Marker': 'string'
+}
+
+activeListResponse = {
+  'AccessKeyMetadata': [
+    {
+      'UserName': 'test1',
+      'AccessKeyId': '11111111111111111111',
+      'Status': 'Active',
+      'CreateDate': validDays
+    },
+    {
+      'UserName': 'test1',
+      'AccessKeyId': '22222222222222222222',
+      'Status': 'Inactive',
+      'CreateDate': expireDays
+    }
+  ],
+  'IsTruncated': False,
+  'Marker': 'string'
 }
 
 deleteResponse = {
@@ -54,17 +87,56 @@ deleteResponse = {
 
 stubber = Stubber(updateKey.client)
 
-def test_create_user_key():
-# takes in user who gets new key created
-# capture new key ID and key secret
-# prepares key ID, key secret, and CI server variable update
-# update CI server variable via API
+
+def test_evaluate_one_inactive_user():
+# takes in user with single inactive key
+# create new key
+# return new key Id and secret key
+# returns 0 for deleted key
+  stubber.add_response('list_access_keys', oneListResponse, {'UserName': 'test1'})
   stubber.add_response('create_access_key', createResponse, {'UserName': 'test1'})
   stubber.activate()
 
-  response = updateKey.createUserKey('test1')
+  response = updateKey.evalUserKeys('test1')
 
   stubber.assert_no_pending_responses()
   stubber.deactivate()
-  assert response['AccessKey']['AccessKeyId'] == '33333333333333333333'
-  assert response['AccessKey']['SecretAccessKey'] == 'ASDFGHJKLZXCVBNM'
+  assert response['user'] == 'test1'
+  assert response['newKey']['AccessKeyId'] == '33333333333333333333'
+  assert response['newKey']['SecretAccessKey'] == 'ASDFGHJKLZXCVBNM'
+  assert response['deletedKey'] == 0
+
+def test_evaluate_two_inactive_user():
+# takes in user with two inactive keys
+# evaluates number of Inactive keys
+# if more than one Inactive keys, delete oldest key
+# create new key
+# return new key Id and secret key
+  stubber.add_response('list_access_keys', twoListResponse, {'UserName': 'test1'})
+  stubber.add_response('delete_access_key', deleteResponse, {'UserName': 'test1', 'AccessKeyId': '11111111111111111111'})
+  stubber.add_response('create_access_key', createResponse, {'UserName': 'test1'})
+  stubber.activate()
+
+  response = updateKey.evalUserKeys('test1')
+
+  stubber.assert_no_pending_responses()
+  stubber.deactivate()
+  assert response['user'] == 'test1'
+  assert response['newKey']['AccessKeyId'] == '33333333333333333333'
+  assert response['newKey']['SecretAccessKey'] == 'ASDFGHJKLZXCVBNM'
+  assert response['deletedKey'] == '11111111111111111111'
+
+def test_evaluate_one_active_one_inactive_user():
+# takes in user with one valid active key and one inactive key
+# determines upgrade user had two active keys
+# returns no deleted key, returns no new key
+  stubber.add_response('list_access_keys', activeListResponse, {'UserName': 'test1'})
+  stubber.activate()
+
+  response = updateKey.evalUserKeys('test1')
+
+  stubber.assert_no_pending_responses()
+  stubber.deactivate()
+  assert response['user'] == 'test1'
+  assert response['newKey'] == 0
+  assert response['deletedKey'] == 0
