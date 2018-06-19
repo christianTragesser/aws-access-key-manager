@@ -1,19 +1,32 @@
 import slack
 
 def keyMessages(events):
-    messages = {}
-    messages['warnings'] = []
-    messages['expirations'] = []
-    for event in events:
-        for key in event['warn']:
-            warnEvent = 'User: *%s*, Key Id: %s     *%d* days remaining\n' % ( event['user'], key['key'], key['ttl'])
-            messages['warnings'].append(warnEvent)
+  messages = {}
+  messages['warnings'] = []
+  messages['expirations'] = []
+  messages['updates'] = []
+  for event in events:
+    for key in event['warn']:
+      warnEvent = 'User: *%s*, Key Id: %s     *%d* days remaining\n' % ( event['user'], key['key'], key['ttl'])
+      messages['warnings'].append(warnEvent)
 
-        for key in event['expired']:
-            expireEvent = 'User: *%s*, Key Id: %s *now inactive*\n' % ( event['user'], key)
-            messages['expirations'].append(expireEvent)
+    for key in event['expired']:
+      expireEvent = 'User: *%s*, Key Id: %s *now inactive*\n' % ( event['user'], key)
+      messages['expirations'].append(expireEvent)
 
-    return messages
+    if 'update' in event:
+      if event['update']['newKey'] == 0 and event['update']['deleteKey'] == 0:
+        updateEvent = 'Unable to auto-update user *%s*, existing active key.' % event['user']
+
+      if event['update']['newKey'] != 0:
+        updateEvent = 'User: *%s*, Key Id: %s *auto-update*\n' % ( event['user'],
+                                                                  event['update']['newKey']['AccessKeyId'] )
+
+      if event['update']['deleteKey'] != 0:
+        updateEvent = updateEvent+'User: *%s*, Key Id: %s *deleted*\n' % ( event['user'], event['update']['deleteKey'] )
+
+      messages['updates'].append(updateEvent)
+  return messages
 
 def summary(messages, expireDays, slackUrl):
   summary = {}
@@ -35,5 +48,14 @@ def summary(messages, expireDays, slackUrl):
     color = 'warning'
     slack.webHook_message(slackUrl, title, notice, color)
   
+  if len(messages['updates']) > 0:
+    notice = "Completed auto-renew events:\n"
+    for message in messages['updates']:
+      notice += message
+    summary['update'] = notice
+    title = 'AWS access key change'
+    color = 'warning'
+    slack.webHook_message(slackUrl, title, notice, color)
+
   if len(messages['warnings']) > 0 or len(messages['expirations']) > 0:
     return summary
