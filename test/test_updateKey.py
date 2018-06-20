@@ -89,10 +89,10 @@ stubber = Stubber(updateKey.client)
 
 
 def test_evaluate_one_inactive_user():
-# takes in user with single inactive key
-# create new key
-# return new key Id and secret key
-# returns 0 for deleted key
+  # takes in user with single inactive key
+  # create new key
+  # return new key Id and secret key
+  # returns 0 for deleted key
   stubber.add_response('list_access_keys', oneListResponse, {'UserName': 'test1'})
   stubber.add_response('create_access_key', createResponse, {'UserName': 'test1'})
   stubber.activate()
@@ -107,11 +107,11 @@ def test_evaluate_one_inactive_user():
   assert response['deleteKey'] == 0
 
 def test_evaluate_two_inactive_user():
-# takes in user with two inactive keys
-# evaluates number of Inactive keys
-# if more than one Inactive keys, delete oldest key
-# create new key
-# return new key Id and secret key
+  # takes in user with two inactive keys
+  # evaluates number of Inactive keys
+  # if more than one Inactive keys, delete oldest key
+  # create new key
+  # return new key Id and secret key
   stubber.add_response('list_access_keys', twoListResponse, {'UserName': 'test1'})
   stubber.add_response('delete_access_key', deleteResponse, {'UserName': 'test1', 'AccessKeyId': '11111111111111111111'})
   stubber.add_response('create_access_key', createResponse, {'UserName': 'test1'})
@@ -127,9 +127,9 @@ def test_evaluate_two_inactive_user():
   assert response['deleteKey'] == '11111111111111111111'
 
 def test_evaluate_one_active_one_inactive_user():
-# takes in user with one valid active key and one inactive key
-# determines upgrade user had two active keys
-# returns no deleted key, returns no new key
+  # takes in user with one valid active key and one inactive key
+  # determines upgrade user had two active keys
+  # returns no deleted key, returns no new key
   stubber.add_response('list_access_keys', activeListResponse, {'UserName': 'test1'})
   stubber.activate()
 

@@ -26,9 +26,6 @@ expireResponse = [
   }
 ]
 
-# Construct warning and expire summaries
-# log summaries
-# return summarie
 def test_construct_summary_func():
   # Takes in list of dicts describing warn/expire events
   # Constructs expire actions summary of user and key Id
@@ -42,9 +39,9 @@ def test_construct_summary_func():
                                     'User: *test4*, Key Id: 66666666666666666666 *deleted*\n')
 
 @mock.patch('slack.webHook_message')
-# Takes in list of warning and expire events
-# Sends warning and expire messages to Slack webhook and system logs
 def test_get_summary_func(mock_slack_message):
+  # Takes in list of warning and expire events
+  # Sends warning and expire messages to Slack webhook and system logs
   messages = summaries.keyMessages(expireResponse)
   summary = summaries.summary(messages, 90, 'https://slackurl.com')
   
