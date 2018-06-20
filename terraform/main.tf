@@ -82,6 +82,8 @@ resource "aws_iam_role_policy" "management_policy" {
     {
       "Effect": "Allow",
       "Action": [
+        "iam:DeleteAccessKey",
+        "iam:CreateAccessKey",
         "iam:UpdateAccessKey",
         "iam:ListUsers",
         "iam:GetUser",
@@ -129,9 +131,12 @@ resource "aws_lambda_function" "iam_lambda" {
 
   environment {
     variables = {
-      SLACK_URL   = "${var.slack-token}"
-      WARN_DAYS   = "${var.warn-days}"
-      EXPIRE_DAYS = "${var.expire-days}"
+      SLACK_URL    = "${var.slack-token}"
+      WARN_DAYS    = "${var.warn-days}"
+      EXPIRE_DAYS  = "${var.expire-days}"
+      CI_API_URL   = "${var.ci-api-url}"
+      CI_API_TOKEN = "${var.ci-api-token}"
+      UPDATE_USERS = "${var.update-users}"
     }
   }
 }

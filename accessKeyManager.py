@@ -23,16 +23,32 @@ def handler(event, context):
     sys.exit(1)
   else:
     slack_url = os.environ['SLACK_URL']
-    
-  issueUsers = expireKeys.getIssueUsers(warning, expiration)
-  if len(issueUsers) > 0:
-    for event in issueUsers:
-      if event['user'] in updateKeyUserList:
-        event['user']['update'] = updateKey.evalUserKeys(event['user'])
+  
+  try:  
+    issueUsers = expireKeys.getIssueUsers(warning, expiration)
+  except Exception as e:
+    log.error(e.message)
+    sys.exit(1)
 
-    eventMessages = summaries.keyMessages(issueUsers)
-    summary = summaries.summary(eventMessages, expiration, slack_url)
-    log.warn(summary)
+  if len(issueUsers) > 0:
+    if len(updateKeyUserList) == 0:
+      log.info('No auto-update users listed, skipping auto-update of service account keys.')
+    else:
+      try:
+        for event in issueUsers:
+          if event['user'] in updateKeyUserList:
+            event['update'] = updateKey.evalUserKeys(event['user'])
+      except Exception as e:
+        log.error(e.message)
+        sys.exit(1)
+
+    try:
+      eventMessages = summaries.keyMessages(issueUsers)
+      summary = summaries.summary(eventMessages, expiration, slack_url)
+      log.warn(summary)
+    except Exception as e:
+      log.error(e.message)
+      sys.exit(1)
 
 if __name__ == '__main__':
   handler(1, 2)
