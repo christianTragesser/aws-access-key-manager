@@ -56,6 +56,6 @@ def test_get_summary_func(mock_slack_message):
   assert summary['warn'] == ('The following keys are close to expiration(90 days).  Please renew soon:\n'
                                 'User: *test1*, Key Id: 11111111111111111111     *5* days remaining\n'
                                 'User: *test3*, Key Id: 44444444444444444444     *3* days remaining\n')
-  assert summary['update'] == ('Completed auto-renew events:\n'
+  assert summary['update'] == ('Auto-renew events:\n'
                                 'User: *test4*, Key Id: 88888888888888888888 *auto-update*\n'
                                 'User: *test4*, Key Id: 66666666666666666666 *deleted*\n')
