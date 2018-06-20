@@ -16,7 +16,7 @@ def keyMessages(events):
 
     if 'update' in event:
       if event['update']['newKey'] == 0 and event['update']['deleteKey'] == 0:
-        updateEvent = 'Unable to auto-update user *%s*, existing active key.' % event['user']
+        updateEvent = 'Unable to auto-update user *%s*, existing additional active key.\n' % event['user']
 
       if event['update']['newKey'] != 0:
         updateEvent = 'User: *%s*, Key Id: %s *auto-update*\n' % ( event['user'],
@@ -49,7 +49,7 @@ def summary(messages, expireDays, slackUrl):
     slack.webHook_message(slackUrl, title, notice, color)
   
   if len(messages['updates']) > 0:
-    notice = "Completed auto-renew events:\n"
+    notice = "Auto-renew events:\n"
     for message in messages['updates']:
       notice += message
     summary['update'] = notice
