@@ -20,8 +20,14 @@ variable "expire-days" {
 
 variable "slack-token" {}
 
-variable "ci-api-url" {}
+variable "ci-api-url" {
+  default = ""
+}
 
-variable "ci-api-token" {}
+variable "ci-api-token" {
+ default = "" 
+}
 
-variable "update-users" {}
+variable "update-users" {
+  default = ""
+}
