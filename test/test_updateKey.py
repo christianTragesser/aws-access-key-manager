@@ -104,7 +104,7 @@ def test_evaluate_one_inactive_user():
   assert response['user'] == 'test1'
   assert response['newKey']['AccessKeyId'] == '33333333333333333333'
   assert response['newKey']['SecretAccessKey'] == 'ASDFGHJKLZXCVBNM'
-  assert response['deletedKey'] == 0
+  assert response['deleteKey'] == 0
 
 def test_evaluate_two_inactive_user():
 # takes in user with two inactive keys
@@ -124,7 +124,7 @@ def test_evaluate_two_inactive_user():
   assert response['user'] == 'test1'
   assert response['newKey']['AccessKeyId'] == '33333333333333333333'
   assert response['newKey']['SecretAccessKey'] == 'ASDFGHJKLZXCVBNM'
-  assert response['deletedKey'] == '11111111111111111111'
+  assert response['deleteKey'] == '11111111111111111111'
 
 def test_evaluate_one_active_one_inactive_user():
 # takes in user with one valid active key and one inactive key
@@ -139,4 +139,4 @@ def test_evaluate_one_active_one_inactive_user():
   stubber.deactivate()
   assert response['user'] == 'test1'
   assert response['newKey'] == 0
-  assert response['deletedKey'] == 0
+  assert response['deleteKey'] == 0

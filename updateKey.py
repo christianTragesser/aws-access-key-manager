@@ -25,15 +25,15 @@ def evalUserKeys(user):
       inactiveKeys.append(key)
 
   if len(inactiveKeys) == 1 and len(keys['AccessKeyMetadata']) == 1:
-    userInfo['deletedKey'] = 0
+    userInfo['deleteKey'] = 0
     newKey = client.create_access_key(UserName=user)
     userInfo['newKey'] = newKey['AccessKey']
   elif len(inactiveKeys) == 2:
-    userInfo['deletedKey'] = deleteUserKey(user, inactiveKeys)
+    userInfo['deleteKey'] = deleteUserKey(user, inactiveKeys)
     newKey = client.create_access_key(UserName=user)
     userInfo['newKey'] = newKey['AccessKey']
   else:
-    userInfo['deletedKey'] = 0
+    userInfo['deleteKey'] = 0
     userInfo['newKey'] = 0
   
   return userInfo
