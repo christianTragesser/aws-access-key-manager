@@ -1,4 +1,4 @@
-import boto3
+import pytest
 import datetime
 import sys, os
 import botocore.session
