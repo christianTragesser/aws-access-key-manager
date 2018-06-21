@@ -3,12 +3,13 @@
 
 A boto3 utility used for automated evaluation, invalidation, and renewal of IAM user access keys.  Keys older than the expire threshold are inactivated; keys older than the warn threshold but less than expire produce warnings with time-to-live values.  Warning, expiration, and renewal notifications are communicated via [Slack webhook](https://api.slack.com/incoming-webhooks) and CloudWatch logs.
 
-##### Dependencies
+#### Dependencies
  * [Slack webhook](https://api.slack.com/incoming-webhooks) for receiving event notifications
  * Expiration policy for IAM Access Keys based on age(default: 90 days)
+ * [Terraform](https://www.terraform.io/)
 
-#### Install
-##### Terraform module(Lambda):
+### Install
+#### Lambda Terraform module:
 1. Clone this repository, then from repository root create the Lambda artifact
 ```
 ~/aws-access-key-manager$ bash -C ./build_lambda_bin.sh
@@ -55,10 +56,9 @@ module.aws_key_man.aws_cloudwatch_event_target.cron: Creation complete after 0s 
 module.aws_key_man.aws_cloudwatch_metric_alarm.cron: Creation complete after 0s (ID: access_key_management)
 
 Apply complete! Resources: 9 added, 0 changed, 0 destroyed.
-~/aws_env$
 ```
 
-#### Customization
+### Customization
 The default expiration threshold is 90 days, warnings start at 85 days.  If you'd like to customize these thresholds you can supply `warn-days` and `expire-days` as integer variables when implementing the Terraform module.
 ```
 # main.tf
@@ -78,10 +78,10 @@ module "aws_key_man" {
 }
 ```
 
-#### Auto-update of IAM user service accounts
-When key automation components must reside outside the control of IAM roles and policies, it is common to create an IAM service account for use with automation tooling. Often a Continuous Integration(CI) server is used to securely store and access IAM secrets pertaining to automation service accounts.  From a security perspective, it is imperative service account keys adhere to the same expiration policy enforced for regular IAM users. Currently this feature allows for automatic renewing of IAM secrets then updating them in Gitlab CI; providing seamless management of critical pipeline secrets.
+### Auto-update of IAM user service accounts
+When key automation components must reside outside IAM managed infrastructure it is common to create an IAM service account for use with automation tooling. Often a Continuous Integration(CI) server is used to securely store and access IAM secrets pertaining to automation service accounts.  From a security perspective, it is imperative service account keys adhere to the same expiration policy enforced for regular IAM users. Currently this feature allows for automatic renewal of IAM secrets then updating the new secret values in Gitlab CI as group or project level variables; providing seamless management of critical pipeline secrets.
 
-##### Dependencies
+#### Dependencies
  * Gitlab instance URL for [group-level](https://docs.gitlab.com/ee/api/group_level_variables.html#doc-nav) or [project-level](https://docs.gitlab.com/ee/api/project_level_variables.html) variables
  * [Gitlab Personal Token (API)](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#doc-nav)
  * List of desired auto-update IAM user accounts
@@ -100,7 +100,7 @@ module "aws_key_man" {
   source = "github.com/christianTragesser/aws-access-key-manager//terraform"
 
   slack-token = "https://hooks.slack.com/services/<your>/<slack>/<webhook>"
-  ci-api-url = "https://gitlab.com/api/v4/projects/12345/variables"
+  ci-api-url = "https://gitlab.com/api/v4/projects/<project id>/variables"
   ci-api-token = "<personal access token>"
   update-users = "ci.user,aws.srv,terraform.svc,bill"
   
