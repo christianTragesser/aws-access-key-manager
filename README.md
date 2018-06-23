@@ -86,7 +86,7 @@ When key automation components must reside outside IAM managed infrastructure it
  * [Gitlab Personal Token (API)](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#doc-nav)
  * List of desired auto-update IAM user accounts
 
- To enable the auto-update feature of this module supply `ci-api-url`, `ci-api-token`, and `update-users` as string variables.  The `update-users` variable must be a comma delinated string.
+ To enable the auto-update feature of this module supply `ci-api-url`, `ci-api-token`, and `update-users` as string variables.  The `update-users` variable must be a comma delineated string.
 ```
 # main.tf
 
