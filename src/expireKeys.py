@@ -54,4 +54,4 @@ def getIssueUsers(warn, expire):
 
 if __name__ == "__main__":
   users = getIssueUsers(85, 90)
-  print users
+  print(users)

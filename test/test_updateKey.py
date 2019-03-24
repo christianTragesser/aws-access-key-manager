@@ -1,9 +1,7 @@
 import pytest
 import datetime
-import sys, os
 import botocore.session
 from botocore.stub import Stubber
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import updateKey
 
 today = datetime.datetime.now()

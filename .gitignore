@@ -1,3 +1,4 @@
 *.pyc
 test/__pycache__
 test/.pytest_cache
+venv/

@@ -12,7 +12,7 @@ def createPayload(events):
     update['idKey'] = event['update']['newKey']['AccessKeyId']
     update['secretKey'] = event['update']['newKey']['SecretAccessKey']
     payload['updates'].append(update)
-  print payload
+  print(payload)
   return payload
 
 def updateVariables(payload):
@@ -36,7 +36,7 @@ def updateVariables(payload):
 def detailVar(url, token, ciVarKey):
   header = {'PRIVATE-TOKEN': token}
   r = requests.get(url, headers=header)
-  print r
+  print(r)
   if r.status_code == 200:
     return True
   else:
@@ -45,7 +45,7 @@ def detailVar(url, token, ciVarKey):
 def createVar(url, token, ciVarKey, ciVarVal):
   header = {'PRIVATE-TOKEN': token}
   r = requests.post(url, data = {'key':ciVarKey,'value':ciVarVal}, headers=header)
-  print r
+  print(r)
   if r.status_code == 200:
     return True
   else:
@@ -54,7 +54,7 @@ def createVar(url, token, ciVarKey, ciVarVal):
 def updateVar(url, token, ciVarVal):
   header = {'PRIVATE-TOKEN': token}
   r = requests.put(url, data = {'value':ciVarVal}, headers=header)
-  print r
+  print(r)
   if r.status_code == 200:
     return True
   else:

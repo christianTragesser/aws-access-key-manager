@@ -1,7 +1,6 @@
-import os, sys, json
+import json
 import mock
 import datetime
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import summaries
 
 expireResponse = [

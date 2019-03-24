@@ -1,17 +1,24 @@
-image: christiantragesser/dind-ci
+image: registry.gitlab.com/christiantragesser/aws-access-key-manager:dev
 
 variables:
-  DOCKER_DRIVER: overlay2
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://localhost:2375
 
 services:
-  - name: docker:dind
+  - name: docker:stable-dind
+    command: ["--registry-mirror=https://dockerhub-mirror0.artifactory.asynchrony.com"]
 
 stages:
   - test
 
 test:
   stage: test
-  tags:
-    - docker
   script:
+    - pip install -r requirements.txt
+    - pip install -e .
     - pytest $CI_PROJECT_DIR/test
+    - pytest --cov ./src ./test --cov-report html --cov-report term
+  artifacts:
+    paths:
+    - "$CI_PROJECT_DIR/htmlcov"
+    expire_in: 1 week

@@ -126,7 +126,7 @@ resource "aws_lambda_function" "iam_lambda" {
   role             = "${aws_iam_role.lambda_iam.arn}"
   handler          = "accessKeyManager.handler"
   source_code_hash = "${base64sha256(file("${var.lambda-zip}"))}"
-  runtime          = "python2.7"
+  runtime          = "python3.6"
   timeout          = 5
 
   environment {
