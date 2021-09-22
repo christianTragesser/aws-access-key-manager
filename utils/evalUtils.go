@@ -27,12 +27,10 @@ func setDates() expirationDates {
 	expStr, expSet := os.LookupEnv("EXPIRE_DAYS")
 
 	if warnSet && (warnStr != "") {
-		warnInt, _ := strconv.Atoi(warnStr)
-		warnDays = warnInt
+		warnDays, _ = strconv.Atoi(warnStr)
 	}
 	if expSet && (expStr != "") {
-		expInt, _ := strconv.Atoi(expStr)
-		expireDays = expInt
+		expireDays, _ = strconv.Atoi(expStr)
 	}
 
 	logrus.Printf("Warn days: %v", warnDays)
