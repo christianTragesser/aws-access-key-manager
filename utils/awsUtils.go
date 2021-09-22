@@ -15,14 +15,14 @@ type IAMAPI interface {
 	ListAccessKeys(ctx context.Context, params *iam.ListAccessKeysInput, optFns ...func(*iam.Options)) (*iam.ListAccessKeysOutput, error)
 }
 
-func ListUsers(c context.Context, api IAMAPI) (*iam.ListUsersOutput, error) {
+func listUsers(c context.Context, api IAMAPI) (*iam.ListUsersOutput, error) {
 	input := &iam.ListUsersInput{
 		MaxItems: aws.Int32(int32(100)),
 	}
 	return api.ListUsers(c, input)
 }
 
-func ListAccessKeys(c context.Context, api IAMAPI, username string) (*iam.ListAccessKeysOutput, error) {
+func listAccessKeys(c context.Context, api IAMAPI, username string) (*iam.ListAccessKeysOutput, error) {
 	input := &iam.ListAccessKeysInput{
 		MaxItems: aws.Int32(int32(100)),
 		UserName: &username,
@@ -39,7 +39,7 @@ func AcctIAMUsers() []string {
 
 	iamClient := iam.NewFromConfig(cfg)
 
-	request, err := ListUsers(context.TODO(), iamClient)
+	request, err := listUsers(context.TODO(), iamClient)
 	if err != nil {
 		logrus.Fatal(err)
 		panic(err)
@@ -47,8 +47,8 @@ func AcctIAMUsers() []string {
 
 	var users []string
 
-	for i := 0; i < len(request.Users); i++ {
-		users = append(users, *request.Users[i].UserName)
+	for _, user := range request.Users {
+		users = append(users, *user.UserName)
 	}
 
 	return users
@@ -63,7 +63,7 @@ func GetAccessKeys(userName string) []types.AccessKeyMetadata {
 
 	iamClient := iam.NewFromConfig(cfg)
 
-	result, err := ListAccessKeys(context.TODO(), iamClient, userName)
+	result, err := listAccessKeys(context.TODO(), iamClient, userName)
 	if err != nil {
 		logrus.Fatal(err)
 		panic(err)
