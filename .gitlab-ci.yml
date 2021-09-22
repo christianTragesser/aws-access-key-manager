@@ -22,3 +22,5 @@ test:
     paths:
     - "$CI_PROJECT_DIR/htmlcov"
     expire_in: 1 week
+  only:
+    - master
