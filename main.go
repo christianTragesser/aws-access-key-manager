@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	utils.SendSlackNotification("Test Message", "This is a test", "good")
+	utils.ReportKeys()
 }

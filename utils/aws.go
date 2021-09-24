@@ -41,6 +41,7 @@ func AcctIAMUsers() []string {
 
 	request, err := listUsers(context.TODO(), iamClient)
 	if err != nil {
+		logrus.Error("There is an issue with the supplied IAM credentials.")
 		logrus.Fatal(err)
 		panic(err)
 	}
