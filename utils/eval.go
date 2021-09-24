@@ -33,8 +33,8 @@ func setDates() expirationDates {
 		expireDays, _ = strconv.Atoi(expStr)
 	}
 
-	logrus.Printf("Warn days: %v", warnDays)
-	logrus.Printf("Expire days: %v", expireDays)
+	logrus.Infof("WARNING set for key age >= %v days and < %v days.", warnDays, expireDays)
+	logrus.Infof("EXPIRE set to key age >= %v days.", expireDays)
 
 	rightNow := time.Now().UTC()
 	dates.warnDate = rightNow.AddDate(0, 0, -warnDays)
@@ -62,10 +62,10 @@ func ExamineKeys() issueKeys {
 
 		if int(expDiff) >= evalDates.expireDays {
 			reportKeys.expireKeys = append(reportKeys.expireKeys, key)
-			logrus.Printf("EXPIRED - Key: %v (%v days expired) User: %v", *key.AccessKeyId, (int(expDiff) - evalDates.expireDays), *key.UserName)
+			logrus.Printf("EXPIRED - Key: %v (%v days expired)\tUser: %v", *key.AccessKeyId, (int(expDiff) - evalDates.expireDays), *key.UserName)
 		} else if int(warnDiff) >= evalDates.warnDays {
 			reportKeys.warnKeys = append(reportKeys.warnKeys, key)
-			logrus.Printf("WARN - Key: %v (%v days remaining) User: %v", *key.AccessKeyId, (evalDates.expireDays - int(warnDiff)), *key.UserName)
+			logrus.Printf("WARN - Key: %v (%v days remaining)\tUser: %v", *key.AccessKeyId, (evalDates.expireDays - int(warnDiff)), *key.UserName)
 		} else {
 			logrus.Printf("Key: %v User: %v", *key.AccessKeyId, *key.UserName)
 		}
