@@ -20,7 +20,7 @@ func ReportKeys() {
 	}
 
 	if len(reportedKeys.warnKeys) > 0 {
-		notice := fmt.Sprintf("The following active keys are close to expiration(%d days).  Please renew soon:\n", reportedKeys.expireKeys[0].expire)
+		notice := fmt.Sprintf("The following active keys are approaching expiration(%d days):\n", reportedKeys.expireKeys[0].expire)
 		for _, key := range reportedKeys.warnKeys {
 			notice = notice + key.eventMessage
 		}
