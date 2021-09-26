@@ -1,6 +1,0 @@
-FROM registry.gitlab.com/christiantragesser/pypline-ci:dev3
-
-#Dev dependencies
-RUN pip install responses --no-cache-dir
-
-CMD ["/bin/sh"]
