@@ -1,4 +1,4 @@
-FROM golang:alpine AS build
+FROM docker.io/library/golang:alpine AS build
 
 RUN apk update && apk add --no-cache git ca-certificates tzdata && \
     update-ca-certificates && \
