@@ -1,33 +1,56 @@
-variable "cw-rule" {
-  default = "access_key_manager"
+variable "region" {
+  type    = string
 }
 
-variable "cron-schedule" {
-  default = "0 7 ? * * *"
+variable "vpc_id" {
+  type = string
 }
 
-variable "lambda-zip" {
-  default = "key_man.zip"
+variable "subnet_ids" {
+  type = list(string)
+}
+
+variable "container-image" {
+  type    = string
+  default = "registry.gitlab.com/christiantragesser/aws-access-key-manager"
 }
 
 variable "warn-days" {
-  default = 85
+  type    = string
+  default = "85"
 }
 
 variable "expire-days" {
-  default = 90
+  type    = string
+  default = "90"
 }
 
-variable "slack-token" {}
+variable "cron-schedule" {
+  type    = string
+  default = "0 7 ? * * *"
+}
+
+variable "slack-url" {
+  type    = string
+  default = ""
+}
+
+variable "slack-token" {
+  type    = string
+  default = ""
+}
 
 variable "ci-api-url" {
+  type    = string
   default = ""
 }
 
 variable "ci-api-token" {
- default = "" 
+  type    = string
+  default = ""
 }
 
 variable "update-users" {
+  type    = string
   default = ""
 }
