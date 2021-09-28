@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: aws-access-key-manager
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: aws-access-key-manager
+            image: registry.gitlab.com/christiantragesser/aws-access-key-manager 
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: EXPIRE_DAYS
+              value: "90"
+            - name: WARN_DAYS
+              value: "85"
+            - name: SLACK_URL
+              value: ""
+            - name: AWS_REGION
+              value: "us-east-1"
+          restartPolicy: OnFailure
