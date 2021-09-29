@@ -13,6 +13,7 @@ import (
 type IAMAPI interface {
 	ListUsers(ctx context.Context, params *iam.ListUsersInput, optFns ...func(*iam.Options)) (*iam.ListUsersOutput, error)
 	ListAccessKeys(ctx context.Context, params *iam.ListAccessKeysInput, optFns ...func(*iam.Options)) (*iam.ListAccessKeysOutput, error)
+	UpdateAccessKey(ctx context.Context, params *iam.UpdateAccessKeyInput, optFns ...func(*iam.Options)) (*iam.UpdateAccessKeyOutput, error)
 }
 
 func listUsers(c context.Context, api IAMAPI) (*iam.ListUsersOutput, error) {
@@ -30,14 +31,27 @@ func listAccessKeys(c context.Context, api IAMAPI, username string) (*iam.ListAc
 	return api.ListAccessKeys(c, input)
 }
 
-func AcctIAMUsers() []string {
+func disableAccessKey(c context.Context, api IAMAPI, expiredKey types.AccessKeyMetadata) (*iam.UpdateAccessKeyOutput, error) {
+	input := &iam.UpdateAccessKeyInput{
+		AccessKeyId: expiredKey.AccessKeyId,
+		Status:      "Inactive",
+		UserName:    expiredKey.UserName,
+	}
+	return api.UpdateAccessKey(c, input)
+}
+
+func iamClient() *iam.Client {
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		logrus.Fatal(err)
 		panic(err)
 	}
 
-	iamClient := iam.NewFromConfig(cfg)
+	return iam.NewFromConfig(cfg)
+}
+
+func AcctIAMUsers() []string {
+	iamClient := iamClient()
 
 	request, err := listUsers(context.TODO(), iamClient)
 	if err != nil {
@@ -56,13 +70,7 @@ func AcctIAMUsers() []string {
 }
 
 func GetAccessKeys(userName string) []types.AccessKeyMetadata {
-	cfg, err := config.LoadDefaultConfig(context.TODO())
-	if err != nil {
-		logrus.Fatal(err)
-		panic(err)
-	}
-
-	iamClient := iam.NewFromConfig(cfg)
+	iamClient := iamClient()
 
 	result, err := listAccessKeys(context.TODO(), iamClient, userName)
 	if err != nil {
@@ -78,4 +86,17 @@ func GetAccessKeys(userName string) []types.AccessKeyMetadata {
 	}
 
 	return activeKeys
+}
+
+func DisableKey(key types.AccessKeyMetadata) {
+	iamClient := iamClient()
+
+	request, err := disableAccessKey(context.TODO(), iamClient, key)
+	if err != nil {
+		logrus.Error("Failed to disable access key.")
+		logrus.Fatal(err)
+		panic(err)
+	}
+
+	logrus.Info(request)
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/iam/types"
@@ -53,6 +54,10 @@ func setDates() expirationDates {
 }
 
 func ExamineKeys() issueReport {
+	disable, disableSet := os.LookupEnv("KEY_DISABLE")
+	if disableSet {
+		disable = strings.ToUpper(disable)
+	}
 	var activeAccessKeys []types.AccessKeyMetadata
 	reportKeys := issueReport{}
 
@@ -71,14 +76,19 @@ func ExamineKeys() issueReport {
 		warnDiff := (evalDates.warnDate.Sub(*key.CreateDate).Hours() / 24)
 		expDiff := (evalDates.expireDate.Sub(*key.CreateDate).Hours() / 24)
 
+		// report expired key if older than expire date
 		if int(expDiff) >= evalDates.expireDays {
-			// report expired key if older than expire date
 			expKey := issueKey{
 				keyData:      key,
 				eventMessage: fmt.Sprintf("User: %v\nKey Id: *%v* (%v days expired)\n\n", *key.UserName, *key.AccessKeyId, int(expDiff)),
 				expire:       evalDates.expireDays,
 			}
+			if disableSet && (disable == "TRUE") {
+				DisableKey(key)
+			}
+
 			reportKeys.expireKeys = append(reportKeys.expireKeys, expKey)
+
 		} else if (int(warnDiff) >= evalDates.warnDays) && (int(expDiff) < evalDates.expireDays) {
 			// report warning for keys younger than expire date but older than warn date
 			daysRemaining := (evalDates.expireDays - int(expDiff))
