@@ -33,8 +33,8 @@ module "aws_key_man" {
   source = "github.com/christianTragesser/aws-access-key-manager//terraform"
 
   region     = "us-east-1"
-  vpc_id     = "vpc-0123456789abcde" 
-  subnet_ids = ["subnet-0123456789abcde"]
+  vpc-id     = "vpc-0123456789abcde" 
+  subnet-ids = ["subnet-0123456789abcde"]
   slack-url  = "https://hooks.slack.com/services/<your>/<slack>/<webhook>"
 }
 ```
