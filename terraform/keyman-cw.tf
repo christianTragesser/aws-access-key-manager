@@ -24,7 +24,7 @@ resource "aws_cloudwatch_event_target" "fargate_scheduled_task" {
     platform_version    = "1.4.0"
 
     network_configuration {
-      subnets          = var.subnet_ids
+      subnets          = var.subnet-ids
       security_groups  = [aws_security_group.keyman_sg.id]
       assign_public_ip = false
     }

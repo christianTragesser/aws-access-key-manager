@@ -1,10 +1,7 @@
-# Module creates Cloudwatch(CW) cron event rule, CW cron alarm, CW logging,
-# Lambda for accessKeyManager, and least privilege IAM roles/policies
-
 locals {
   keyman_id = "keyman"
   keyman_tags = {
-    "Name" : "keyman"
+    "Name" : local.keyman_id
     "created-by" : "terraform/aws-access-key-management"
   }
 }

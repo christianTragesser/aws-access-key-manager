@@ -1,7 +1,7 @@
 resource "aws_security_group" "keyman_sg" {
   name        = join("-", [local.keyman_id, "sg"])
   description = "keyman sg"
-  vpc_id = var.vpc_id
+  vpc_id = var.vpc-id
 
   tags = local.keyman_tags
 }

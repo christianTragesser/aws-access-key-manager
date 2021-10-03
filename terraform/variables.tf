@@ -2,11 +2,11 @@ variable "region" {
   type    = string
 }
 
-variable "vpc_id" {
+variable "vpc-id" {
   type = string
 }
 
-variable "subnet_ids" {
+variable "subnet-ids" {
   type = list(string)
 }
 
@@ -31,26 +31,6 @@ variable "cron-schedule" {
 }
 
 variable "slack-url" {
-  type    = string
-  default = ""
-}
-
-variable "slack-token" {
-  type    = string
-  default = ""
-}
-
-variable "ci-api-url" {
-  type    = string
-  default = ""
-}
-
-variable "ci-api-token" {
-  type    = string
-  default = ""
-}
-
-variable "update-users" {
   type    = string
   default = ""
 }
