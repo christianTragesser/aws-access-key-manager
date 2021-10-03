@@ -40,6 +40,9 @@ func setDates() expirationDates {
 	if expSet && (expStr != "") {
 		expireDays, _ = strconv.Atoi(expStr)
 	}
+	if expireDays <= warnDays {
+		logrus.Fatal("Invalid expire value. Warning threshold value must be less than expire threshold value.")
+	}
 
 	rightNow := time.Now().UTC()
 	dates.warnDate = rightNow.AddDate(0, 0, -warnDays)
@@ -80,11 +83,13 @@ func ExamineKeys() issueReport {
 		if int(expDiff) >= evalDates.expireDays {
 			expKey := issueKey{
 				keyData:      key,
-				eventMessage: fmt.Sprintf("User: %v\nKey Id: *%v* (%v days expired)\n\n", *key.UserName, *key.AccessKeyId, int(expDiff)),
+				eventMessage: fmt.Sprintf("User: %v\nKey Id: *%v* (%v days expired)\n", *key.UserName, *key.AccessKeyId, int(expDiff)),
 				expire:       evalDates.expireDays,
 			}
 			if disableSet && (disable == "TRUE") {
 				DisableKey(key)
+				disableMsg := fmt.Sprintf("Key %v has been *disabled*\n\n", *key.AccessKeyId)
+				expKey.eventMessage = expKey.eventMessage + disableMsg
 			}
 
 			reportKeys.expireKeys = append(reportKeys.expireKeys, expKey)
