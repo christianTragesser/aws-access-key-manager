@@ -91,12 +91,10 @@ func GetAccessKeys(userName string) []types.AccessKeyMetadata {
 func DisableKey(key types.AccessKeyMetadata) {
 	iamClient := iamClient()
 
-	request, err := disableAccessKey(context.TODO(), iamClient, key)
+	_, err := disableAccessKey(context.TODO(), iamClient, key)
 	if err != nil {
 		logrus.Error("Failed to disable access key.")
 		logrus.Fatal(err)
 		panic(err)
 	}
-
-	logrus.Info(request)
 }
