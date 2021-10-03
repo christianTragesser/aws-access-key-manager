@@ -1,6 +1,6 @@
 # Cloudwatch resources
 resource "aws_cloudwatch_log_group" "keyman_logs" {
-  name              = "/ecs/keyman-logs-${data.aws_caller_identity.keyman.account_id}"
+  name              = "/aws/ecs/keyman-logs-${data.aws_caller_identity.keyman.account_id}"
   retention_in_days = 30
 
   tags = local.keyman_tags
