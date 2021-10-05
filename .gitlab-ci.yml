@@ -11,7 +11,7 @@ include:
 stages:
   - publish
 
-publish:
+publish:container
   stage: publish
   tags:
     - docker
@@ -19,6 +19,24 @@ publish:
     - .kaniko
   variables:
     DOCKER_BUILD_STAGE: publish
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      changes:
+        - go.*
+        - main.go
+        - utils/*
+        - Dockerfile
+
+publish:artifact
+  stage: publish
+  extends:
+    - .kaniko
+  variables:
+    DOCKER_BUILD_STAGE: binary
+    KANIKO_ADDITIONAL_ARGS: --destination registry.local/image:latest --no-push --ignore-path /aws-access-key-manager
+  artifacts:
+    paths:
+      - aws-access-key-manager
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       changes:
