@@ -34,6 +34,8 @@ publish:artifact:
   variables:
     DOCKER_BUILD_STAGE: binary
     KANIKO_ADDITIONAL_ARGS: --destination registry.local/image:latest --no-push --ignore-path /aws-access-key-manager
+  after_script:
+    - cp /aws-access-key-manager $CI_PROJECT_DIR
   artifacts:
     paths:
       - aws-access-key-manager
