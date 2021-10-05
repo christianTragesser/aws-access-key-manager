@@ -11,7 +11,7 @@ include:
 stages:
   - publish
 
-publish:container
+publish:container:
   stage: publish
   tags:
     - docker
@@ -27,7 +27,7 @@ publish:container
         - utils/*
         - Dockerfile
 
-publish:artifact
+publish:artifact:
   stage: publish
   extends:
     - .kaniko
