@@ -16,21 +16,31 @@ RUN go get -d -v
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     -ldflags='-w -s -extldflags "-static"' -a \
-    -o /go/bin/aws-access-key-manager .
+    -o /go/bin/aws-access-key-manager-amd64-linux .
 
+RUN CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build \
+    -ldflags='-w -s -extldflags "-static"' -a \
+    -o /go/bin/aws-access-key-manager-amd64-darwin .
 
-FROM scratch AS binary
-COPY --from=build /go/bin/aws-access-key-manager /aws-access-key-manager
+RUN CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build \
+    -ldflags='-w -s -extldflags "-static"' -a \
+    -o /go/bin/aws-access-key-manager-amd64.exe .
 
+FROM scratch AS linux-binary
+COPY --from=build /go/bin/aws-access-key-manager-amd64-linux /aws-access-key-manager-amd64-linux
 
-FROM scratch as publish
+FROM scratch AS macos-binary
+COPY --from=build /go/bin/aws-access-key-manager-amd64-darwin /aws-access-key-manager-amd64-darwin
 
+FROM scratch AS windows-binary
+COPY --from=build /go/bin/aws-access-key-manager-amd64.exe /aws-access-key-manager-amd64.exe
+
+FROM scratch as container
 COPY --from=build /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /etc/group /etc/group
-
-COPY --from=build /go/bin/aws-access-key-manager /go/bin/aws-access-key-manager
+COPY --from=build /go/bin/aws-access-key-manager-amd64-linux /go/bin/aws-access-key-manager
 
 USER keyman
 
