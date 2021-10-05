@@ -19,6 +19,9 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     -o /go/bin/aws-access-key-manager .
 
 
+FROM scratch AS binary
+COPY --from=build /go/bin/aws-access-key-manager /
+
 
 FROM scratch as publish
 
