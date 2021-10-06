@@ -14,26 +14,29 @@ COPY utils ./utils
 
 RUN go get -d -v
 
+FROM build AS linux-compile
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     -ldflags='-w -s -extldflags "-static"' -a \
     -o /go/bin/aws-access-key-manager-amd64-linux .
 
+FROM build AS macos-compile
 RUN CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build \
     -ldflags='-w -s -extldflags "-static"' -a \
     -o /go/bin/aws-access-key-manager-amd64-darwin .
 
-RUN CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build \
+FROM build AS windows-compile
+RUN CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build \
     -ldflags='-w -s -extldflags "-static"' -a \
     -o /go/bin/aws-access-key-manager-amd64.exe .
 
 FROM scratch AS linux-binary
-COPY --from=build /go/bin/aws-access-key-manager-amd64-linux /aws-access-key-manager-amd64-linux
+COPY --from=linux-compile /go/bin/aws-access-key-manager-amd64-linux /aws-access-key-manager-amd64-linux
 
 FROM scratch AS macos-binary
-COPY --from=build /go/bin/aws-access-key-manager-amd64-darwin /aws-access-key-manager-amd64-darwin
+COPY --from=macos-compile /go/bin/aws-access-key-manager-amd64-darwin /aws-access-key-manager-amd64-darwin
 
 FROM scratch AS windows-binary
-COPY --from=build /go/bin/aws-access-key-manager-amd64.exe /aws-access-key-manager-amd64.exe
+COPY --from=windows-compile /go/bin/aws-access-key-manager-amd64.exe /aws-access-key-manager-amd64.exe
 
 FROM scratch as container
 COPY --from=build /usr/share/zoneinfo /usr/share/zoneinfo
