@@ -34,3 +34,8 @@ variable "slack-url" {
   type    = string
   default = ""
 }
+
+variable "key-disable" {
+  type    = string
+  default = "False"
+}

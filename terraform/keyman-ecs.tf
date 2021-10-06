@@ -42,6 +42,7 @@ resource "aws_ecs_task_definition" "keyman_task" {
         { name : "WARN_DAYS", value : "${var.warn-days}" },
         { name : "EXPIRE_DAYS", value : "${var.expire-days}" },
         { name : "SLACK_URL", value : "${var.slack-url}" },
+        { name : "KEY_DISABLE", value : "${var.key-disable}" },
       ]
       essential = true
       logConfiguration = {
