@@ -39,8 +39,8 @@ export KEY_DISABLE="True"
 ```
 
 ### Use
-`aws-access-key-manager` can be run as binary package or container image.
-#### Binary Package
+`aws-access-key-manager` can be run as a binary package or container image.
+#### Binary Package (AMD64)
 The `aws-access-key-manager` binary package is available for the following platforms:
 * [Linux](https://gitlab.com/christianTragesser/aws-access-key-manager/-/jobs/artifacts/master/download?job=publish:linux)
 * [MacOS](https://gitlab.com/christianTragesser/aws-access-key-manager/-/jobs/artifacts/master/download?job=publish:macos)
