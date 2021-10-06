@@ -83,7 +83,7 @@ func ExamineKeys() issueReport {
 		if int(expDiff) >= evalDates.expireDays {
 			expKey := issueKey{
 				keyData:      key,
-				eventMessage: fmt.Sprintf("User: %v\nKey Id: *%v* (%v days expired)\n", *key.UserName, *key.AccessKeyId, int(expDiff)),
+				eventMessage: fmt.Sprintf("User: %v - Key Id: *%v* (%v days expired)\n", *key.UserName, *key.AccessKeyId, int(expDiff)),
 				expire:       evalDates.expireDays,
 			}
 			if disableSet && (disable == "TRUE") {
@@ -100,7 +100,7 @@ func ExamineKeys() issueReport {
 
 			warnKey := issueKey{
 				keyData:      key,
-				eventMessage: fmt.Sprintf("User: %v\tKey Id: *%v* (%v days remaining)\n\n", *key.UserName, *key.AccessKeyId, int(daysRemaining)),
+				eventMessage: fmt.Sprintf("User: %v - Key Id: *%v* (%v days remaining)\n\n", *key.UserName, *key.AccessKeyId, int(daysRemaining)),
 				expire:       evalDates.expireDays,
 			}
 			reportKeys.warnKeys = append(reportKeys.warnKeys, warnKey)
