@@ -39,7 +39,7 @@ export KEY_DISABLE="True"
 ```
 
 ### Use
-`aws-access-key-manager` can be run as binary package or docker image.
+`aws-access-key-manager` can be run as binary package or container image.
 #### Binary Package
 The `aws-access-key-manager` binary package is available for the following platforms:
 * [Linux](https://gitlab.com/christianTragesser/aws-access-key-manager/-/jobs/artifacts/master/download?job=publish:linux)
@@ -57,7 +57,7 @@ $ docker run --rm -it \
 ```
 
 #### Terraform
-The Terraform module included in this repository utilizes AWS Fargate and Cloudwatch Events.  AWS Region, VPC ID, and subnet IDs are required variables for the Terraform module.
+This repository includes a Terraform module which utilizes AWS Fargate and Cloudwatch Events.  AWS Region, VPC ID, and subnet IDs are required variables.
 ```
 module "aws_key_man" {
   source = "github.com/christianTragesser/aws-access-key-manager//terraform"
