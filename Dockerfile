@@ -43,7 +43,7 @@ COPY --from=build /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /etc/group /etc/group
-COPY --from=build /go/bin/aws-access-key-manager-amd64-linux /go/bin/aws-access-key-manager
+COPY --from=linux-compile /go/bin/aws-access-key-manager-amd64-linux /go/bin/aws-access-key-manager
 
 USER keyman
 
