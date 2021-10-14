@@ -1,7 +1,7 @@
 ## AWS IAM access key manager
 [![pipeline status](https://gitlab.com/christianTragesser/aws-access-key-manager/badges/master/pipeline.svg)](https://gitlab.com/christianTragesser/aws-access-key-manager/commits/master)
 
-An AWS IAM utility used to evaluate and invalidate access keys older than a given policy lifetime.  Account IAM users with keys older than the expire or warn thresholds can be reported via [Slack webhook](https://api.slack.com/incoming-webhooks) and container logging.
+An AWS IAM utility used to evaluate and invalidate access keys older than a given policy lifetime.  Account IAM users with keys older than the expire or warn thresholds can be reported via [Slack webhook](https://api.slack.com/incoming-webhooks) and application logs.
 
 
 ### Dependencies
