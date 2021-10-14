@@ -5,7 +5,7 @@ An AWS IAM utility used to evaluate and invalidate access keys older than a give
 
 
 ### Dependencies
-* [AWS STS tokens](https://docs.aws.amazon.com/STS/latest/APIReference/welcome.html) paired with an IAM assume role which enables the following access:
+AWS user credentials with the following IAM access:
   - `iam:GetUser`
   - `iam:ListUsers`
   - `iam:ListAccessKeys`
@@ -13,8 +13,8 @@ An AWS IAM utility used to evaluate and invalidate access keys older than a give
 
 ### Configuration
 #### AWS Credentials
-AWS security credentials are configured by either environment variables (precedence) or credentials file `~/.aws/credentials`.  
-The following environment variables must be set if not found in the credentials file:
+AWS security credentials are configured by either environment variables (precedence) or `default` profile in `$HOME/.aws/credentials`.  
+The following information must be set as environment variables if not provide by a credentials file:
   - `AWS_REGION`
   - `AWS_ACCESS_KEY_ID`
   - `AWS_SECRET_ACCESS_KEY`
