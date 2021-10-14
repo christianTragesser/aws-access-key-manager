@@ -11,16 +11,19 @@ An AWS IAM utility used to evaluate and invalidate access keys older than a give
   - `iam:ListAccessKeys`
   - `iam:UpdateAccessKey`
 
-### Configure
-#### AWS credentials
-AWS credentials are currently supplied via runtime environment variables. The following environment variables must be set:
+### Configuration
+#### AWS Credentials
+AWS security credentials are configured by either environment variables (precedence) or credentials file `~/.aws/credentials`.  
+The following environment variables must be set if not found in the credentials file:
   - `AWS_REGION`
   - `AWS_ACCESS_KEY_ID`
   - `AWS_SECRET_ACCESS_KEY`
   - `AWS_SESSION_TOKEN` (assuming STS token authentication)
 
 #### Warning and Expiration Threasholds
-By default, keys older than 90 days are reported expired.  Keys older than 85 days report a warning message with a time-to-live duration.  These thresholds can be customized by setting `WARN_DAYS` and `EXPIRE_DAYS` environment variables.
+By default, keys older than 90 days are reported expired.  
+Keys older than 85 days report a warning message with a time-to-live duration.  
+These thresholds can be customized by setting `WARN_DAYS` and `EXPIRE_DAYS` environment variables.
 ```
 export WARN_DAYS=12
 export EXPIRE_DAYS=14
@@ -33,7 +36,8 @@ export SLACK_URL="https://hooks.slack.com/services/<your>/<slack>/<webhook>"
 ```
  
  #### Disable Expired Keys
- By default expired keys are only reported.  To automatically inactivate expired keys set the `KEY_DISABLE` environment variable to `True`. 
+ By default expired keys are only reported.  
+ To automatically inactivate expired keys set the `KEY_DISABLE` environment variable to `True`. 
 ```
 export KEY_DISABLE="True"
 ```
@@ -57,7 +61,8 @@ $ docker run --rm -it \
 ```
 
 #### Terraform
-This repository includes a Terraform module which utilizes AWS Fargate and Cloudwatch Events.  AWS Region, VPC ID, and subnet IDs are required variables.
+This repository includes a Terraform module which utilizes AWS Fargate and Cloudwatch Events.  
+AWS `region`, `vpc-id`, and `subnet-ids` are required variables.
 ```
 module "aws_key_man" {
   source = "github.com/christianTragesser/aws-access-key-manager//terraform"
