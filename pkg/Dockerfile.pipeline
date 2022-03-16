@@ -1,0 +1,21 @@
+# Supply source and dependenies
+FROM docker.io/library/golang:alpine AS source
+
+RUN apk add --no-cache git ca-certificates tzdata && \
+    update-ca-certificates && \
+    adduser --disabled-password --gecos "" \
+    --home "/none" --no-create-home \
+    --shell "/sbin/nologin" --uid "2222" "keyman"
+
+
+# Build container image
+FROM scratch as publish
+COPY --from=source /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=source /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=source /etc/passwd /etc/passwd
+COPY --from=source /etc/group /etc/group
+COPY dist/aws-key-man_linux_amd64/aws-key-man /usr/local/bin/aws-access-key-manager
+
+USER keyman
+
+ENTRYPOINT ["/usr/local/bin/aws-access-key-manager"]
