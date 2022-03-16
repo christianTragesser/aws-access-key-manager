@@ -1,86 +1,41 @@
 variables:
   IMAGE_NAME: aws-access-key-manager
-  IMAGE_FILE_PATH: $CI_PROJECT_DIR
 
 include:
   - project: christiantragesser/gitlab-ci-templates
-    ref: master
+    ref: dockerfile-path
     file:
+      - goreleaser.yml
       - kaniko.yml
 
 stages:
   - publish
 
+.default_branch_only:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
+        - go.*
+        - main.go
+        - utils/*
+        - Dockerfile
+
+publish:binary:
+  stage: publish
+  extends:
+    - .bin_publish
+    - .default_branch_only
+  artifacts:
+    paths:
+      - dist/aws-key-man_linux_amd64/aws-key-man
+
 publish:container:
   stage: publish
   extends:
     - .kaniko
+    - .default_branch_only
   variables:
-    DOCKER_BUILD_STAGE: container
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      changes:
-        - go.*
-        - main.go
-        - utils/*
-        - Dockerfile
-
-publish:linux:
-  stage: publish
-  extends:
-    - .kaniko
-  variables:
-    DOCKER_BUILD_STAGE: linux-binary
-    KANIKO_ADDITIONAL_ARGS: --destination registry.local/image:latest --no-push --ignore-path /aws-access-key-manager-amd64-linux
-  after_script:
-    - cp /aws-access-key-manager-amd64-linux $CI_PROJECT_DIR
-  artifacts:
-    paths:
-      - aws-access-key-manager-amd64-linux
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      changes:
-        - go.*
-        - main.go
-        - utils/*
-        - Dockerfile
-
-publish:macos:
-  stage: publish
-  extends:
-    - .kaniko
-  variables:
-    DOCKER_BUILD_STAGE: macos-binary
-    KANIKO_ADDITIONAL_ARGS: --destination registry.local/image:latest --no-push --ignore-path /aws-access-key-manager-amd64-darwin
-  after_script:
-    - cp /aws-access-key-manager-amd64-darwin $CI_PROJECT_DIR
-  artifacts:
-    paths:
-      - aws-access-key-manager-amd64-darwin
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      changes:
-        - go.*
-        - main.go
-        - utils/*
-        - Dockerfile
-
-publish:windows:
-  stage: publish
-  extends:
-    - .kaniko
-  variables:
-    DOCKER_BUILD_STAGE: windows-binary
-    KANIKO_ADDITIONAL_ARGS: --destination registry.local/image:latest --no-push --ignore-path /aws-access-key-manager-amd64.exe
-  after_script:
-    - cp /aws-access-key-manager-amd64.exe $CI_PROJECT_DIR
-  artifacts:
-    paths:
-      - aws-access-key-manager-amd64.exe
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      changes:
-        - go.*
-        - main.go
-        - utils/*
-        - Dockerfile
+    DOCKERFILE_PATH: ./pkg/Dockerfile.pipeline
+    DOCKER_BUILD_STAGE: publish
+  dependencies:
+    - publish:binary
