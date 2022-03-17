@@ -18,7 +18,7 @@ The following information must be set as environment variables if not provide by
   - `AWS_REGION`
   - `AWS_ACCESS_KEY_ID`
   - `AWS_SECRET_ACCESS_KEY`
-  - `AWS_SESSION_TOKEN` (assuming STS token authentication)
+  - `AWS_SESSION_TOKEN` (STS session)
 
 #### Warning and Expiration Threasholds
 By default, keys older than 90 days are reported expired.  
@@ -46,9 +46,9 @@ export KEY_DISABLE="True"
 `aws-access-key-manager` can be run as a binary package or container image.
 #### Binary Package (AMD64)
 The `aws-access-key-manager` binary package is available for the following platforms:
-* [Linux](https://gitlab.com/christianTragesser/aws-access-key-manager/-/jobs/artifacts/master/download?job=publish:linux)
-* [MacOS](https://gitlab.com/christianTragesser/aws-access-key-manager/-/jobs/artifacts/master/download?job=publish:macos)
-* [Windows](https://gitlab.com/christianTragesser/aws-access-key-manager/-/jobs/artifacts/master/download?job=publish:windows)
+* Linux
+* MacOS
+* Windows
 
 #### Container Image
 ```
