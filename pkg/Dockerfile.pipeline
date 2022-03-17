@@ -14,7 +14,7 @@ COPY --from=source /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=source /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=source /etc/passwd /etc/passwd
 COPY --from=source /etc/group /etc/group
-COPY dist/aws-key-man_linux_amd64/aws-key-man /usr/local/bin/aws-access-key-manager
+COPY dist/aws-access-key-manager_linux_amd64/aws-access-key-manager-linux-amd64 /usr/local/bin/aws-access-key-manager
 
 USER keyman
 

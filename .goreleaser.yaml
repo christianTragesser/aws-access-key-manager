@@ -1,27 +1,42 @@
-project_name: aws-key-man
+project_name: aws-access-key-manager
 before:
   hooks:
     - go mod tidy
 builds:
   - env:
       - CGO_ENABLED=0
+    goarch:
+      - amd64
     goos:
       - linux
       - darwin
       - windows
-    goarch:
-      - amd64
+    binary: '{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}'
 checksum:
   name_template: 'checksums.txt'
+  extra_files:
+    - glob: ./dist/{{ .ProjectName }}_darwin_amd64/*
+    - glob: ./dist/{{ .ProjectName }}_linux_amd64/*
+    - glob: ./dist/{{ .ProjectName }}_windows_amd64/*
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  name_template: '{{ incpatch .Version }}-{{ .ShortCommit }}'
 changelog:
+  use: github
   sort: asc
   filters:
     exclude:
-      - '^docs:'
-      - '^test:'
+      - 'README'
+      - 'test'
+      - '^WIP'
+      - 'correct'
+      - 'initial'
+      - 'github'
+      - 'gitlab'
 release:
   github:
     owner: christianTragesser
-    name: aws-access-key-manager
+    name: '{{ .ProjectName }}'
+  extra_files:
+    - glob: ./dist/{{ .ProjectName }}_darwin_amd64/*
+    - glob: ./dist/{{ .ProjectName }}_linux_amd64/*
+    - glob: ./dist/{{ .ProjectName }}_windows_amd64/*

@@ -19,7 +19,7 @@ stages:
         - go.*
         - main.go
         - utils/*
-        - Dockerfile
+        - pkg/Dockerfile.pipeline
 
 publish:binary:
   stage: publish
@@ -28,7 +28,7 @@ publish:binary:
     - .default_branch_only
   artifacts:
     paths:
-      - dist/aws-key-man_linux_amd64/aws-key-man
+      - dist/aws-access-key-manager_linux_amd64/aws-access-key-manager-linux-amd64
 
 publish:container:
   stage: publish
