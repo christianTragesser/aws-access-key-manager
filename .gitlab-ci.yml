@@ -31,6 +31,7 @@ publish:binary:
 
 publish:container:
   stage: publish
+  needs: ["publish:binary"]
   extends:
     - .kaniko
     - .default_branch_only
