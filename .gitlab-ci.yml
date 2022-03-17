@@ -10,6 +10,7 @@ include:
 
 stages:
   - publish
+  - release
 
 .default_branch_only:
   rules:
@@ -40,3 +41,13 @@ publish:container:
     DOCKER_BUILD_STAGE: publish
   dependencies:
     - publish:binary
+
+release:github:
+  stage: release
+  extends:
+    - .gh_release
+
+release:container:
+  stage: release
+  extends:
+    - .kaniko_release
