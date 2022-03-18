@@ -3,7 +3,7 @@ variables:
 
 include:
   - project: christiantragesser/gitlab-ci-templates
-    ref: dockerfile-path
+    ref: master
     file:
       - goreleaser.yml
       - kaniko.yml
