@@ -34,7 +34,7 @@ publish:container:
   stage: publish
   needs: ["publish:binary"]
   extends:
-    - .kaniko
+    - .kaniko_publish
     - .default_branch_only
   variables:
     DOCKERFILE_PATH: ./pkg/Dockerfile.pipeline

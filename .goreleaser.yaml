@@ -35,7 +35,7 @@ changelog:
 release:
   github:
     owner: christianTragesser
-    name: '{{ .ProjectName }}'
+    name: {{ .ProjectName }}
   extra_files:
     - glob: ./dist/{{ .ProjectName }}_darwin_amd64/*
     - glob: ./dist/{{ .ProjectName }}_linux_amd64/*
