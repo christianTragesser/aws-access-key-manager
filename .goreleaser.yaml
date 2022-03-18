@@ -19,19 +19,10 @@ checksum:
     - glob: ./dist/{{ .ProjectName }}_linux_amd64/*
     - glob: ./dist/{{ .ProjectName }}_windows_amd64/*
 snapshot:
-  name_template: '{{ incpatch .Version }}-{{ .ShortCommit }}'
+  name_template: '{{ incpatch .Version }}-rc_{{ .ShortCommit }}'
 changelog:
   use: github
   sort: asc
-  filters:
-    exclude:
-      - 'README'
-      - 'test'
-      - '^WIP'
-      - 'correct'
-      - 'initial'
-      - 'github'
-      - 'gitlab'
 release:
   github:
     owner: christianTragesser
